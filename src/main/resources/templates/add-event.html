@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Form</title>
+</head>
+<body>
+<form th:action="@{/events/save-event}" method="post">
+    <input type="hidden" name="eventId" th:value="${event != null ? event.id : 'Empty'}">
+
+    <label>Name:</label>
+    <input type="text" name="event" th:value="${event != null ? event.name : ''}" required><br>
+
+    <label>Description:</label>
+    <input type="text" name="desc" th:value="${event != null ? event.description : ''}"><br>
+
+    <label>Rating:</label>
+    <input type="number" name="rating" step="0.1" th:value="${event != null ? event.popularityScore : ''}" required><br>
+
+    <label>Select location:</label>
+    <select class="form-control" id="location" name="locationId" required>
+        <option value="">-- Select Location --</option>
+        <option th:each="location : ${locations}"
+                th:value="${location.id}"
+                th:text="${location.name}"
+                th:selected="${event != null and event.location != null and location.id == event.location.id}">
+        </option>
+    </select>
+
+    <button type="submit" th:text="${event != null ? 'Update' : 'Create'}">Submit</button>
+</form>
+
+</body>
+</html>

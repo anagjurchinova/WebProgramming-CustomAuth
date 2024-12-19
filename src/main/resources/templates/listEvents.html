@@ -1,0 +1,62 @@
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="utf-8">
+    <title>Event Booking page - Welcome and choose an Event</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to our Event Booking App</h1>
+</header>
+
+<main>
+    <h2>Choose an event:</h2>
+    <form method="post" action="/events">
+        <h1>Search by name:</h1>
+        <input type="text" name="searchedByName" th:value="${searchedByName}">
+        <h1>Search by rating:</h1>
+        <input type="text" name="searchedByRating" th:value="${searchedByRating}">
+        <input type="submit" value="Search">
+
+        <h1>Search by location:</h1>
+        <input type="text" name="searchedByLocation" th:value="${searchedByLocation}">
+        <input type="submit" value="Search">
+    </form>
+
+    <h2>Event List:</h2>
+    <form method="post" action="/eventBooking">
+        <div th:if="${eventList.size() == 0}">
+            <p>No events found for the specified criteria.</p>
+        </div>
+        <div th:each="event : ${eventList}">
+            <input type="radio" name="eventName" th:value="${event.name}">
+            <label th:text="'Name: ' + ${event.name} + ', Description: ' + ${event.description} + ', Rating: ' + ${event.popularityScore}"></label><br/>
+
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/events/delete/{id}(id=${event.getId()})}">DELETE</a>
+            </th:block>
+
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/events/edit/{id}(id=${event.getId()})}">EDIT</a>
+            </th:block>
+        </div>
+
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+        <a th:href="@{/events/add}">ADD NEW EVENT</a>
+        </th:block>
+
+        <h2>Enter your name:</h2>
+        <input type="text" name="attendeeName" required>
+        <h2>Choose number of tickets:</h2>
+        <input type="number" name="numTickets" min="1" max="10" required><br/>
+        <br/>
+        <input type="submit" value="Submit">
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Event Booking page - Welcome and choose an Event</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to our Event Booking App</h1>
+</header>
+
+<!--private Long id;-->
+<!--private String name;-->
+<!--private String address;-->
+<!--private String capacity;-->
+<!--private String description;-->
+
+<main>
+    <h2>Locations list</h2>
+    <form method="post" action="/locations">
+        <div th:if="${locations.size() == 0}">
+            <p>No events found for the specified criteria.</p>
+        </div>
+        <div th:each="location : ${locations}">
+            <input type="radio" name="locationName" th:value="${location.name}">
+            <!-- add location capacity-->
+            <label th:text="'Name: ' + ${location.name} + ', Description: ' + ${location.description} + ', Address: ' + ${location.address}"></label><br/>
+
+            <a th:href="@{/locations/delete/{id}(id=${location.getId()})}">DELETE</a>
+        </div>
+
+        <a th:href="@{/locations/add}">ADD NEW LOCATION</a>
+    </form>
+</main>
+</body>
+</html>

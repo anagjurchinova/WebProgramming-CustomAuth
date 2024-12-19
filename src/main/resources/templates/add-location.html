@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Locations Form</title>
+</head>
+<body>
+
+<form th:action="@{/locations/save}" method="post">
+    <input type="hidden" name="locationId" th:value="${location != null ? location.id : 'Empty'}">
+
+    <label>Name:</label>
+    <input type="text" name="location" th:value="${location != null ? location.name : ''}" required><br>
+
+    <label>Description:</label>
+    <input type="text" name="desc" th:value="${location != null ? location.description : ''}"><br>
+
+    <label>Address:</label> <!-- rating changed with address -->
+    <input type="text" name="address" th:value="${location != null ? location.address : ''}" required><br>
+
+    <label>Capacity:</label>
+    <input type="text" name="capacity" th:value="${location != null ? location.capacity : ''}" required><br>
+
+    <button type="submit" th:text="${location != null ? 'Update' : 'Create'}">Submit</button>
+</form>
+
+</body>
+</html>
