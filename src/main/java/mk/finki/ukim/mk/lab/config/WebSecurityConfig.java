@@ -2,7 +2,9 @@ package mk.finki.ukim.mk.lab.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,9 +22,13 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @EnableMethodSecurity
 public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
+    private final CustomAuthenticationProvider authProvider;
 
-    public WebSecurityConfig(PasswordEncoder passwordEncoder) {
+
+
+    public WebSecurityConfig(PasswordEncoder passwordEncoder, CustomAuthenticationProvider authProvider) {
         this.passwordEncoder = passwordEncoder;
+        this.authProvider = authProvider;
     }
 
     @Bean
@@ -33,7 +39,7 @@ public class WebSecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers( "/events", "/assets/**", "/locations")
+                        .requestMatchers( "/events", "/assets/**", "/locations", "/register")
                         .permitAll()
                         .requestMatchers("/events/**", "/locations/**").hasRole("ADMIN")
                         .anyRequest()
@@ -78,6 +84,15 @@ public class WebSecurityConfig {
 
         return new InMemoryUserDetailsManager(user1, admin);
     }
+
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authProvider);
+        return authenticationManagerBuilder.build();
+    }
+
 
 
 }

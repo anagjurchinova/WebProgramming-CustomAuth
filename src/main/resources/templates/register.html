@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+</head>
+<body>
+<div th:if="${hasError}"><th:block th:text="${error}"></th:block></div>
+<form method="post">
+    <div>Enter a username:</div><br>
+    <input type="text" name="username" required><br>
+    <div>Enter a password:</div><br>
+    <input type="password" name="password" required><br>
+    <div>Repeat password:</div>
+    <input type="password" name="repeatPassword" required>
+
+    <button type="submit">Sign Up</button>
+</form>
+
+</body>
+</html>

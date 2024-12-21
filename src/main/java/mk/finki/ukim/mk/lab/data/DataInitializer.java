@@ -2,10 +2,14 @@ package mk.finki.ukim.mk.lab.data;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
+import mk.finki.ukim.mk.lab.enumeration.Role;
 import mk.finki.ukim.mk.lab.model.Event;
 import mk.finki.ukim.mk.lab.model.Location;
+import mk.finki.ukim.mk.lab.model.User;
 import mk.finki.ukim.mk.lab.repository.jpa.EventRepository;
 import mk.finki.ukim.mk.lab.repository.jpa.LocationRepository;
+import mk.finki.ukim.mk.lab.repository.jpa.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,10 +18,14 @@ import java.util.List;
 public class DataInitializer {
     private final LocationRepository locationRepository;
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(LocationRepository locationRepository, EventRepository eventRepository) {
+    public DataInitializer(LocationRepository locationRepository, EventRepository eventRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.locationRepository = locationRepository;
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -37,5 +45,6 @@ public class DataInitializer {
         dFest.setLocation(dojran);
 
         eventRepository.saveAll(List.of(ohridCalling, dFest));
+        userRepository.save(new User("admin", passwordEncoder.encode("admin"), Role.ROLE_ADMIN));
     }
 }
